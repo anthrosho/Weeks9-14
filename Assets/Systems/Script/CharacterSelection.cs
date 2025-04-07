@@ -24,9 +24,6 @@ public class AudioButton : MonoBehaviour
         {
             audioSource.PlayOneShot(audioClip);
         }
-        else
-        {
-            Debug.LogError("Audio components not properly set up!");
+      
         }
     }
-}
