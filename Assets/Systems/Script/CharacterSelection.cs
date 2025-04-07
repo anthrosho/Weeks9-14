@@ -20,7 +20,7 @@ public class AudioButton : MonoBehaviour
 
     public void PlayAudio()
     {
-        if (audioClip != null && audioSource != null)
+        if (audioClip != false && audioSource != false)
         {
             audioSource.PlayOneShot(audioClip);
         }
