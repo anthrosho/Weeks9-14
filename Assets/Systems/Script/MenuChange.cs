@@ -23,7 +23,7 @@ public class MenuChange : MonoBehaviour
         RavanduSelect.SetActive(false);
         KyleSelect.SetActive(false);
 
-        // Watches for SwitchToCharacter and triggers on click
+        // On click, procs SwitchToCharacter
         transitionButton.onClick.AddListener(SwitchToCharacterSelect);
     }
 
