@@ -15,7 +15,6 @@ public class StartBattle : MonoBehaviour
     {
         // Battle image is hidden at start
         battleImage.SetActive(false);
-
         battleButton.onClick.AddListener(OnBattleButtonClicked);
     }
 
