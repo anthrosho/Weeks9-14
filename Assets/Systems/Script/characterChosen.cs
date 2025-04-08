@@ -2,81 +2,89 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class CharacterSelectionManager : MonoBehaviour
+public class CharacterSelection : MonoBehaviour
 {
-    [Header("UI Elements")]
-    public Button[] characterButtons;
-    public Button beginCombatButton;
-    public Text selectionPrompt;
+    // Assign these in the Inspector
+    public Button jamesButton;
+    public Button ravanduButton;
+    public Button kyleButton;
+    public Button fightButton;
 
-    [Header("Settings")]
-    public string combatSceneName = "CombatScene";
+    // Creates audio clips in Inspector
+    public AudioSource audioSource;
+    public AudioClip jamesSound;
+    public AudioClip ravanduSound;
+    public AudioClip kyleSound;
+    public AudioClip confirmSound;
 
-    private string player1Selection;
-    private string player2Selection;
+    //Player 1 and Player 2 Logic
+    private string player1Character;
+    private string player2Character;
     private bool isPlayer1Turn = true;
 
     void Start()
     {
-        InitializeSelectionSystem();
-        beginCombatButton.gameObject.SetActive(false);
+        // Setup button clicks.Will track your character selection.
+        jamesButton.onClick.AddListener(() => SelectCharacter("James"));
+        ravanduButton.onClick.AddListener(() => SelectCharacter("Ravandu"));
+        kyleButton.onClick.AddListener(() => SelectCharacter("Kyle"));
+
+        //Sets the fight button to false, so it doesn't appear until selection is done.
+        fightButton.gameObject.SetActive(false);
     }
 
-    void InitializeSelectionSystem()
+    void SelectCharacter(string characterName)
     {
-        foreach (Button button in characterButtons)
-        {
-            button.onClick.AddListener(() => HandleCharacterSelection(button.name));
-        }
+        // Plays me saying their names haha
+        PlayCharacterSound(characterName);
 
-        UpdateSelectionPrompt();
-        beginCombatButton.onClick.AddListener(StartCombat);
-    }
-
-    void HandleCharacterSelection(string characterName)
-    {
+        //  Selection tracker, picks one, puts that string as that value then disables.
         if (isPlayer1Turn)
         {
-            player1Selection = characterName;
-            DisableCharacterButton(characterName);
+            player1Character = characterName;
+            DisableButton(characterName);
         }
         else
         {
-            player2Selection = characterName;
-            foreach (Button button in characterButtons)
-            {
-                button.interactable = false;
-            }
-            beginCombatButton.gameObject.SetActive(true);
+            player2Character = characterName;
+            DisableAllButtons();
+            fightButton.gameObject.SetActive(true);
         }
 
+        
         isPlayer1Turn = !isPlayer1Turn;
-        UpdateSelectionPrompt();
     }
 
-    void DisableCharacterButton(string characterName)
+    void PlayCharacterSound(string name)
     {
-        foreach (Button button in characterButtons)
+        switch (name)
         {
-            if (button.name == characterName)
-            {
-                button.interactable = false;
+            case "James":
+                if (jamesSound) audioSource.PlayOneShot(jamesSound);
                 break;
-            }
+            case "Ravandu":
+                if (ravanduSound) audioSource.PlayOneShot(ravanduSound);
+                break;
+            case "Kyle":
+                if (kyleSound) audioSource.PlayOneShot(kyleSound);
+                break;
         }
     }
 
-    void UpdateSelectionPrompt()
+    void DisableButton(string characterName)
     {
-        selectionPrompt.text = isPlayer1Turn ?
-            "Player 1: Choose Your Character" :
-            "Player 2: Choose Your Character";
+        // Disables the selected character's button
+        if (characterName == "James") jamesButton.interactable = false;
+        if (characterName == "Ravandu") ravanduButton.interactable = false;
+        if (characterName == "Kyle") kyleButton.interactable = false;
     }
 
-    void StartCombat()
+    void DisableAllButtons()
     {
-        PlayerPrefs.SetString("Player1Character", player1Selection);
-        PlayerPrefs.SetString("Player2Character", player2Selection);
-        SceneManager.LoadScene(combatSceneName);
+        jamesButton.interactable = false;
+        ravanduButton.interactable = false;
+        kyleButton.interactable = false;
     }
+
+   
 }
